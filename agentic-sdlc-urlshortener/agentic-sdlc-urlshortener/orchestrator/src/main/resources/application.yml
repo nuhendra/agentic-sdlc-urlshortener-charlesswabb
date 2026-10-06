@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: agentic-orchestrator
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8090
+
+# ---- Security (DEMO values — replace the secret and users in production) ----
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET:dev-secret-change-me-please-32-bytes-minimum-abcdef0123456789}
+    expiration-seconds: 3600
+  users:
+    - username: admin
+      password: ${ADMIN_PASSWORD:admin123}
+      roles: [ROLE_ADMIN, ROLE_USER]
+    - username: user
+      password: ${USER_PASSWORD:user123}
+      roles: [ROLE_USER]
+    # Service account used by automated agents / machine clients.
+    - username: agent
+      password: ${AGENT_PASSWORD:agent123}
+      roles: [ROLE_AGENT]
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    com.schwab.agentic: INFO

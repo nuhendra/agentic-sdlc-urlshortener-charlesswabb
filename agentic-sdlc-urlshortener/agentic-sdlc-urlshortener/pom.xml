@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.schwab.agentic</groupId>
+    <artifactId>agentic-sdlc-urlshortener</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+    <name>Agentic SDLC :: URL Shortener</name>
+    <description>
+        An agentic software-engineering system that drives the full SDLC lifecycle
+        (requirements -> design -> implementation -> testing -> documentation ->
+        release readiness) for a URL shortener service, under governed, controlled autonomy.
+    </description>
+
+    <modules>
+        <module>url-shortener</module>
+        <module>orchestrator</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <!--
+          Compile with method parameter names retained. spring-boot-starter-parent enables this
+          automatically, but this project uses a custom parent, so we set it explicitly. Spring
+          MVC needs it to bind @PathVariable/@RequestParam by name without an explicit value.
+        -->
+        <maven.compiler.parameters>true</maven.compiler.parameters>
+        <!--
+          These are runnable applications, not libraries published to a Maven repository, so the
+          'deploy' goal is skipped. Use 'mvn verify' or 'mvn install', not 'mvn deploy'.
+        -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- JUnit tags excluded from the normal test run; the 'perf' profile clears this. -->
+        <excluded.test.groups>load</excluded.test.groups>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>3.3.4</spring.boot.version>
+        <jjwt.version>0.12.6</jjwt.version>
+        <springdoc.version>2.6.0</springdoc.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <sonar.version>4.0.0.4121</sonar.version>
+
+        <!-- SonarQube: read JaCoCo's XML coverage report (per module). -->
+        <sonar.java.source>21</sonar.java.source>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <!-- The runnable demo/entry points are not meaningful coverage targets. -->
+        <sonar.exclusions>**/DemoRunner.java,**/*Application.java</sonar.exclusions>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- JJWT (JSON Web Token) — pinned here so both modules stay in lockstep. -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- springdoc-openapi (Swagger UI + OpenAPI 3) — not in the Spring Boot BOM. -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
+                    <configuration>
+                        <!-- Skip slow/timing-sensitive tagged tests unless the 'perf' profile is active. -->
+                        <excludedGroups>${excluded.test.groups}</excludedGroups>
+                    </configuration>
+                </plugin>
+                <!-- SonarQube scanner (run via `mvn sonar:sonar`). -->
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${sonar.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!-- Plugins inherited and executed by every module. -->
+        <plugins>
+            <!--
+              JaCoCo code coverage: the agent instruments tests (prepare-agent) and a report is
+              written to target/site/jacoco/ during 'verify'. SonarQube ingests the XML report.
+            -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Runs the performance/load tests (JUnit tag 'load') in addition to the normal suite. -->
+        <profile>
+            <id>perf</id>
+            <properties>
+                <excluded.test.groups></excluded.test.groups>
+            </properties>
+        </profile>
+    </profiles>
+</project>

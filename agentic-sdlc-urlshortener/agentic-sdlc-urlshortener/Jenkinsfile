@@ -1,0 +1,160 @@
+// Declarative CI/CD pipeline: build -> test -> Docker image -> push -> deploy to Kubernetes.
+//
+// Implements the architecture:
+//   push to Git -> Jenkins triggers pipeline -> build & test -> build & push images -> kubectl deploy
+//
+// Prerequisites in Jenkins (see docs/CICD.md):
+//   * Tools configured in "Global Tool Configuration": a JDK 21 named 'JDK21' and Maven named 'Maven3'.
+//   * Plugins: Git, Pipeline, Docker Pipeline, Kubernetes CLI.
+//   * Credentials:
+//       - 'registry-credentials'  (username/password for the container registry)
+//       - 'kubeconfig'            (a kubeconfig file credential for the target cluster)
+//   * A node/agent with the Docker CLI and kubectl available on PATH.
+
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK21'
+        maven 'Maven3'
+    }
+
+    parameters {
+        string(name: 'REGISTRY', defaultValue: 'docker.io/your-org',
+               description: 'Container registry / namespace to push images to')
+        string(name: 'K8S_NAMESPACE', defaultValue: 'default',
+               description: 'Kubernetes namespace to deploy into')
+        booleanParam(name: 'RUN_PERF_TESTS', defaultValue: false,
+               description: 'Also run the performance/load tests (mvn -Pperf)')
+        booleanParam(name: 'RUN_SONAR', defaultValue: false,
+               description: 'Run SonarQube analysis (requires a configured SonarQube server)')
+        booleanParam(name: 'DEPLOY', defaultValue: true,
+               description: 'Deploy to Kubernetes after a successful build')
+    }
+
+    options {
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+    }
+
+    environment {
+        REGISTRY_CREDENTIALS = 'registry-credentials'
+        KUBECONFIG_CREDENTIALS = 'kubeconfig'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    // Immutable, traceable image tag: short commit SHA + build number.
+                    env.GIT_SHORT = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                    env.IMAGE_TAG = "${env.GIT_SHORT}-${env.BUILD_NUMBER}"
+                    echo "Building tag ${env.IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                // clean verify = compile + unit + integration + security + reliability tests.
+                sh 'mvn -B -ntp clean verify'
+            }
+            post {
+                always {
+                    junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true, allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Code Quality (SonarQube)') {
+            when { expression { return params.RUN_SONAR } }
+            steps {
+                // 'SonarQube' is the server name configured in Manage Jenkins -> System.
+                // Coverage comes from the JaCoCo XML produced by the 'Build & Test' stage.
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn -B -ntp sonar:sonar'
+                }
+                // Optional: block on the quality gate (requires a SonarQube webhook to Jenkins).
+                // timeout(time: 5, unit: 'MINUTES') { waitForQualityGate abortPipeline: true }
+            }
+        }
+
+        stage('Performance Tests') {
+            when { expression { return params.RUN_PERF_TESTS } }
+            steps {
+                sh 'mvn -B -ntp -Pperf -pl url-shortener test'
+            }
+            post {
+                always {
+                    junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+                }
+            }
+        }
+
+        stage('Build & Push Images') {
+            steps {
+                script {
+                    docker.withRegistry("https://${registryHost(params.REGISTRY)}", env.REGISTRY_CREDENTIALS) {
+                        def modules = ['url-shortener', 'orchestrator']
+                        for (m in modules) {
+                            // Build context is the repo root; each module has its own Dockerfile.
+                            def image = docker.build(
+                                "${params.REGISTRY}/${m}:${env.IMAGE_TAG}",
+                                "-f ${m}/Dockerfile .")
+                            image.push()
+                            image.push('latest')
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            when { expression { return params.DEPLOY } }
+            steps {
+                withKubeConfig([credentialsId: env.KUBECONFIG_CREDENTIALS]) {
+                    sh """
+                        kubectl -n ${params.K8S_NAMESPACE} apply -f deploy/k8s/
+
+                        # Roll each deployment to the freshly pushed, immutable tag.
+                        kubectl -n ${params.K8S_NAMESPACE} set image deployment/url-shortener \
+                            url-shortener=${params.REGISTRY}/url-shortener:${env.IMAGE_TAG}
+                        kubectl -n ${params.K8S_NAMESPACE} set image deployment/orchestrator \
+                            orchestrator=${params.REGISTRY}/orchestrator:${env.IMAGE_TAG}
+
+                        # Wait for the rollout; fail the build (and allow rollback) if it stalls.
+                        kubectl -n ${params.K8S_NAMESPACE} rollout status deployment/url-shortener --timeout=120s
+                        kubectl -n ${params.K8S_NAMESPACE} rollout status deployment/orchestrator --timeout=120s
+                    """
+                }
+            }
+            post {
+                failure {
+                    // Automatic rollback to the previous good ReplicaSet on a failed rollout.
+                    withKubeConfig([credentialsId: env.KUBECONFIG_CREDENTIALS]) {
+                        sh """
+                            kubectl -n ${params.K8S_NAMESPACE} rollout undo deployment/url-shortener || true
+                            kubectl -n ${params.K8S_NAMESPACE} rollout undo deployment/orchestrator || true
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success { echo "Pipeline succeeded: ${env.IMAGE_TAG}" }
+        failure { echo "Pipeline failed: ${env.IMAGE_TAG}" }
+        cleanup { cleanWs() }
+    }
+}
+
+// Extracts the registry host (first path segment) so docker.withRegistry gets a valid URL.
+def registryHost(String registry) {
+    return registry.split('/')[0]
+}

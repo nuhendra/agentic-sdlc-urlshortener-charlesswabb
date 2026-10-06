@@ -1,0 +1,424 @@
+Compiling 26 core source files with javac...
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36707 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+Running the orchestration acceptance demo...
+
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=36707 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+
+============================================================
+SCENARIO 1 ? GREENFIELD: add custom alias support
+============================================================
+-- audit trail (greenfield-93139181) --
+#1    RUN_CREATED          -                  run created for: Custom alias support
+#2    RUN_STARTED          -                  scenario=GREENFIELD
+#3    STAGE_READY          REQUIREMENTS       ready
+#4    STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#5    ENTRY_GATE           REQUIREMENTS       ok
+#6    AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#7    EXIT_GATE            REQUIREMENTS       ok
+#8    DECISION             REQUIREMENTS       Ambiguity assessed at 0.10
+#9    STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=20
+#10   STAGE_READY          DESIGN             ready
+#11   STAGE_STARTED        DESIGN             attempt budget=3
+#12   ENTRY_GATE           DESIGN             ok
+#13   AGENT_CALL           DESIGN             attempt 1 produced design-output
+#14   EXIT_GATE            DESIGN             ok
+#15   STAGE_SUCCEEDED      DESIGN             latency_ms=3
+#16   STAGE_READY          IMPLEMENTATION     ready
+#17   STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#18   ENTRY_GATE           IMPLEMENTATION     ok
+#19   AGENT_CALL           IMPLEMENTATION     attempt 1 produced implementation-output
+#20   EXIT_GATE            IMPLEMENTATION     ok
+#21   APPROVAL_REQUESTED   IMPLEMENTATION     high-impact stage
+#22   APPROVAL_GRANTED     IMPLEMENTATION     by auto-policy
+#23   STAGE_SUCCEEDED      IMPLEMENTATION     latency_ms=1
+#24   STAGE_READY          TESTING            ready
+#25   STAGE_READY          DOCUMENTATION      ready
+#26   STAGE_STARTED        DOCUMENTATION      attempt budget=3
+#27   ENTRY_GATE           DOCUMENTATION      ok
+#28   AGENT_CALL           DOCUMENTATION      attempt 1 produced documentation-output
+#29   EXIT_GATE            DOCUMENTATION      ok
+#30   STAGE_SUCCEEDED      DOCUMENTATION      latency_ms=1
+#31   STAGE_STARTED        TESTING            attempt budget=3
+#32   ENTRY_GATE           TESTING            ok
+#33   AGENT_CALL           TESTING            attempt 1 produced testing-output
+#34   EXIT_GATE            TESTING            ok
+#35   STAGE_SUCCEEDED      TESTING            latency_ms=1
+#36   STAGE_READY          RELEASE_READINESS  ready
+#37   STAGE_STARTED        RELEASE_READINESS  attempt budget=2
+#38   ENTRY_GATE           RELEASE_READINESS  ok
+#39   AGENT_CALL           RELEASE_READINESS  attempt 1 produced release_readiness-output
+#40   EXIT_GATE            RELEASE_READINESS  ok
+#41   APPROVAL_REQUESTED   RELEASE_READINESS  high-impact stage
+#42   APPROVAL_GRANTED     RELEASE_READINESS  by auto-policy
+#43   STAGE_SUCCEEDED      RELEASE_READINESS  latency_ms=1
+#44   RUN_COMPLETED        -                  all stages complete
+-- metrics --
+success_rate=100% stages_ok=6 stages_failed=0 retries=0 rollbacks=0 approvals=2 replans=0 mttr_ms=0 e2e_ms=56 llm_calls=6 llm_tokens=883
+-- final run state: COMPLETED --
+
+  ? greenfield completes
+  ? release stage succeeded
+  ? greenfield hit >=2 approval checkpoints (impl + release)
+  ? greenfield needed no retries
+
+============================================================
+SCENARIO 2 ? BROWNFIELD: harden redirect + rate-limit resolve
+============================================================
+-- audit trail (brownfield-32343fd6) --
+#45   RUN_CREATED          -                  run created for: Harden redirect + rate-limit resolve
+#46   RUN_STARTED          -                  scenario=BROWNFIELD
+#47   STAGE_READY          REQUIREMENTS       ready
+#48   STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#49   ENTRY_GATE           REQUIREMENTS       ok
+#50   AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#51   EXIT_GATE            REQUIREMENTS       ok
+#52   DECISION             REQUIREMENTS       Ambiguity assessed at 0.15
+#53   STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=1
+#54   STAGE_READY          DESIGN             ready
+#55   STAGE_STARTED        DESIGN             attempt budget=3
+#56   ENTRY_GATE           DESIGN             ok
+#57   AGENT_CALL           DESIGN             attempt 1 produced design-output
+#58   EXIT_GATE            DESIGN             ok
+#59   STAGE_SUCCEEDED      DESIGN             latency_ms=1
+#60   STAGE_READY          IMPLEMENTATION     ready
+#61   STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#62   ENTRY_GATE           IMPLEMENTATION     ok
+#63   AGENT_CALL           IMPLEMENTATION     attempt 1 produced implementation-output
+#64   EXIT_GATE            IMPLEMENTATION     exit gate: implementation self-check not complete
+#65   STAGE_FAILED         IMPLEMENTATION     attempt 1 failed: exit gate: implementation self-check not complete
+#66   STAGE_RETRY          IMPLEMENTATION     retrying (self-correction)
+#67   AGENT_CALL           IMPLEMENTATION     attempt 2 produced implementation-output
+#68   EXIT_GATE            IMPLEMENTATION     ok
+#69   APPROVAL_REQUESTED   IMPLEMENTATION     high-impact stage
+#70   APPROVAL_GRANTED     IMPLEMENTATION     by auto-policy
+#71   STAGE_SUCCEEDED      IMPLEMENTATION     latency_ms=16
+#72   STAGE_READY          TESTING            ready
+#73   STAGE_READY          DOCUMENTATION      ready
+#74   STAGE_STARTED        DOCUMENTATION      attempt budget=3
+#75   ENTRY_GATE           DOCUMENTATION      ok
+#76   STAGE_STARTED        TESTING            attempt budget=3
+#77   ENTRY_GATE           TESTING            ok
+#78   AGENT_CALL           DOCUMENTATION      attempt 1 produced documentation-output
+#79   EXIT_GATE            DOCUMENTATION      ok
+#80   STAGE_SUCCEEDED      DOCUMENTATION      latency_ms=1
+#81   AGENT_CALL           TESTING            attempt 1 produced testing-output
+#82   EXIT_GATE            TESTING            ok
+#83   STAGE_SUCCEEDED      TESTING            latency_ms=1
+#84   STAGE_READY          RELEASE_READINESS  ready
+#85   STAGE_STARTED        RELEASE_READINESS  attempt budget=2
+#86   ENTRY_GATE           RELEASE_READINESS  ok
+#87   AGENT_CALL           RELEASE_READINESS  attempt 1 produced release_readiness-output
+#88   EXIT_GATE            RELEASE_READINESS  ok
+#89   APPROVAL_REQUESTED   RELEASE_READINESS  high-impact stage
+#90   APPROVAL_GRANTED     RELEASE_READINESS  by auto-policy
+#91   STAGE_SUCCEEDED      RELEASE_READINESS  latency_ms=1
+#92   RUN_COMPLETED        -                  all stages complete
+-- metrics --
+success_rate=86% stages_ok=6 stages_failed=1 retries=1 rollbacks=0 approvals=2 replans=0 mttr_ms=16 e2e_ms=31 llm_calls=7 llm_tokens=1323
+-- final run state: COMPLETED --
+
+  ? brownfield completes
+  ? brownfield implementation self-corrected via a retry
+  ? implementation recovered
+
+============================================================
+SCENARIO 3 ? AMBIGUOUS: 'make it more reliable'
+============================================================
+-- audit trail (ambiguous-73e6a3e8) --
+#93   RUN_CREATED          -                  run created for: Make it more reliable
+#94   RUN_STARTED          -                  scenario=AMBIGUOUS
+#95   STAGE_READY          REQUIREMENTS       ready
+#96   STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#97   ENTRY_GATE           REQUIREMENTS       ok
+#98   AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#99   EXIT_GATE            REQUIREMENTS       ok
+#100  APPROVAL_REQUESTED   REQUIREMENTS       high-impact stage
+#101  APPROVAL_GRANTED     REQUIREMENTS       by auto-policy
+#102  DECISION             REQUIREMENTS       Ambiguity assessed at 0.80
+#103  STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=2
+#104  STAGE_READY          DESIGN             ready
+#105  STAGE_STARTED        DESIGN             attempt budget=3
+#106  ENTRY_GATE           DESIGN             ok
+#107  AGENT_CALL           DESIGN             attempt 1 produced design-output
+#108  EXIT_GATE            DESIGN             ok
+#109  STAGE_SUCCEEDED      DESIGN             latency_ms=0
+#110  STAGE_READY          IMPLEMENTATION     ready
+#111  STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#112  ENTRY_GATE           IMPLEMENTATION     ok
+#113  AGENT_CALL           IMPLEMENTATION     attempt 1 produced implementation-output
+#114  EXIT_GATE            IMPLEMENTATION     ok
+#115  APPROVAL_REQUESTED   IMPLEMENTATION     high-impact stage
+#116  APPROVAL_GRANTED     IMPLEMENTATION     by auto-policy
+#117  STAGE_SUCCEEDED      IMPLEMENTATION     latency_ms=1
+#118  STAGE_READY          TESTING            ready
+#119  STAGE_READY          DOCUMENTATION      ready
+#120  STAGE_STARTED        DOCUMENTATION      attempt budget=3
+#121  ENTRY_GATE           DOCUMENTATION      ok
+#122  AGENT_CALL           DOCUMENTATION      attempt 1 produced documentation-output
+#123  EXIT_GATE            DOCUMENTATION      ok
+#124  STAGE_SUCCEEDED      DOCUMENTATION      latency_ms=1
+#125  STAGE_STARTED        TESTING            attempt budget=3
+#126  ENTRY_GATE           TESTING            ok
+#127  AGENT_CALL           TESTING            attempt 1 produced testing-output
+#128  EXIT_GATE            TESTING            ok
+#129  STAGE_SUCCEEDED      TESTING            latency_ms=0
+#130  STAGE_READY          RELEASE_READINESS  ready
+#131  STAGE_STARTED        RELEASE_READINESS  attempt budget=2
+#132  ENTRY_GATE           RELEASE_READINESS  ok
+#133  AGENT_CALL           RELEASE_READINESS  attempt 1 produced release_readiness-output
+#134  EXIT_GATE            RELEASE_READINESS  ok
+#135  APPROVAL_REQUESTED   RELEASE_READINESS  high-impact stage
+#136  APPROVAL_GRANTED     RELEASE_READINESS  by auto-policy
+#137  STAGE_SUCCEEDED      RELEASE_READINESS  latency_ms=0
+#138  RUN_COMPLETED        -                  all stages complete
+-- metrics --
+success_rate=100% stages_ok=6 stages_failed=0 retries=0 rollbacks=0 approvals=3 replans=0 mttr_ms=0 e2e_ms=11 llm_calls=6 llm_tokens=880
+-- final run state: COMPLETED --
+
+  ? ambiguous completes after clarification checkpoint
+  ? ambiguity forced a human clarification checkpoint
+>> Requirement clarified post-hoc; re-planning from REQUIREMENTS...
+-- audit trail (ambiguous-73e6a3e8) --
+#93   RUN_CREATED          -                  run created for: Make it more reliable
+#94   RUN_STARTED          -                  scenario=AMBIGUOUS
+#95   STAGE_READY          REQUIREMENTS       ready
+#96   STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#97   ENTRY_GATE           REQUIREMENTS       ok
+#98   AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#99   EXIT_GATE            REQUIREMENTS       ok
+#100  APPROVAL_REQUESTED   REQUIREMENTS       high-impact stage
+#101  APPROVAL_GRANTED     REQUIREMENTS       by auto-policy
+#102  DECISION             REQUIREMENTS       Ambiguity assessed at 0.80
+#103  STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=2
+#104  STAGE_READY          DESIGN             ready
+#105  STAGE_STARTED        DESIGN             attempt budget=3
+#106  ENTRY_GATE           DESIGN             ok
+#107  AGENT_CALL           DESIGN             attempt 1 produced design-output
+#108  EXIT_GATE            DESIGN             ok
+#109  STAGE_SUCCEEDED      DESIGN             latency_ms=0
+#110  STAGE_READY          IMPLEMENTATION     ready
+#111  STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#112  ENTRY_GATE           IMPLEMENTATION     ok
+#113  AGENT_CALL           IMPLEMENTATION     attempt 1 produced implementation-output
+#114  EXIT_GATE            IMPLEMENTATION     ok
+#115  APPROVAL_REQUESTED   IMPLEMENTATION     high-impact stage
+#116  APPROVAL_GRANTED     IMPLEMENTATION     by auto-policy
+#117  STAGE_SUCCEEDED      IMPLEMENTATION     latency_ms=1
+#118  STAGE_READY          TESTING            ready
+#119  STAGE_READY          DOCUMENTATION      ready
+#120  STAGE_STARTED        DOCUMENTATION      attempt budget=3
+#121  ENTRY_GATE           DOCUMENTATION      ok
+#122  AGENT_CALL           DOCUMENTATION      attempt 1 produced documentation-output
+#123  EXIT_GATE            DOCUMENTATION      ok
+#124  STAGE_SUCCEEDED      DOCUMENTATION      latency_ms=1
+#125  STAGE_STARTED        TESTING            attempt budget=3
+#126  ENTRY_GATE           TESTING            ok
+#127  AGENT_CALL           TESTING            attempt 1 produced testing-output
+#128  EXIT_GATE            TESTING            ok
+#129  STAGE_SUCCEEDED      TESTING            latency_ms=0
+#130  STAGE_READY          RELEASE_READINESS  ready
+#131  STAGE_STARTED        RELEASE_READINESS  attempt budget=2
+#132  ENTRY_GATE           RELEASE_READINESS  ok
+#133  AGENT_CALL           RELEASE_READINESS  attempt 1 produced release_readiness-output
+#134  EXIT_GATE            RELEASE_READINESS  ok
+#135  APPROVAL_REQUESTED   RELEASE_READINESS  high-impact stage
+#136  APPROVAL_GRANTED     RELEASE_READINESS  by auto-policy
+#137  STAGE_SUCCEEDED      RELEASE_READINESS  latency_ms=0
+#138  RUN_COMPLETED        -                  all stages complete
+#139  REPLAN               REQUIREMENTS       upstream changed; invalidating dependents [TESTING, DOCUMENTATION, DESIGN, IMPLEMENTATION, RELEASE_READINESS]
+#140  RUN_CREATED          -                  run created for: Make it more reliable
+#141  RUN_STARTED          -                  scenario=AMBIGUOUS
+#142  STAGE_READY          DESIGN             ready
+#143  STAGE_STARTED        DESIGN             attempt budget=3
+#144  ENTRY_GATE           DESIGN             ok
+#145  AGENT_CALL           DESIGN             attempt 2 produced design-output
+#146  EXIT_GATE            DESIGN             ok
+#147  STAGE_SUCCEEDED      DESIGN             latency_ms=0
+#148  STAGE_READY          IMPLEMENTATION     ready
+#149  STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#150  ENTRY_GATE           IMPLEMENTATION     ok
+#151  AGENT_CALL           IMPLEMENTATION     attempt 2 produced implementation-output
+#152  EXIT_GATE            IMPLEMENTATION     ok
+#153  APPROVAL_REQUESTED   IMPLEMENTATION     high-impact stage
+#154  APPROVAL_GRANTED     IMPLEMENTATION     by auto-policy
+#155  STAGE_SUCCEEDED      IMPLEMENTATION     latency_ms=1
+#156  STAGE_READY          TESTING            ready
+#157  STAGE_READY          DOCUMENTATION      ready
+#158  STAGE_STARTED        TESTING            attempt budget=3
+#159  ENTRY_GATE           TESTING            ok
+#160  AGENT_CALL           TESTING            attempt 2 produced testing-output
+#161  EXIT_GATE            TESTING            ok
+#162  STAGE_SUCCEEDED      TESTING            latency_ms=0
+#163  STAGE_STARTED        DOCUMENTATION      attempt budget=3
+#164  ENTRY_GATE           DOCUMENTATION      ok
+#165  AGENT_CALL           DOCUMENTATION      attempt 2 produced documentation-output
+#166  EXIT_GATE            DOCUMENTATION      ok
+#167  STAGE_SUCCEEDED      DOCUMENTATION      latency_ms=1
+#168  STAGE_READY          RELEASE_READINESS  ready
+#169  STAGE_STARTED        RELEASE_READINESS  attempt budget=2
+#170  ENTRY_GATE           RELEASE_READINESS  ok
+#171  AGENT_CALL           RELEASE_READINESS  attempt 2 produced release_readiness-output
+#172  EXIT_GATE            RELEASE_READINESS  ok
+#173  APPROVAL_REQUESTED   RELEASE_READINESS  high-impact stage
+#174  APPROVAL_GRANTED     RELEASE_READINESS  by auto-policy
+#175  STAGE_SUCCEEDED      RELEASE_READINESS  latency_ms=1
+#176  RUN_COMPLETED        -                  all stages complete
+-- metrics --
+success_rate=100% stages_ok=11 stages_failed=0 retries=0 rollbacks=0 approvals=5 replans=1 mttr_ms=0 e2e_ms=22 llm_calls=11 llm_tokens=1639
+-- final run state: COMPLETED --
+
+  ? re-plan recorded
+  ? run re-completes after re-plan
+
+============================================================
+GOVERNANCE A ? policy BLOCKER triggers rollback (fault-injected secret leak)
+============================================================
+-- audit trail (governance-eb5cbeea) --
+#177  RUN_CREATED          -                  run created for: Outbound webhook (fault-injected)
+#178  RUN_STARTED          -                  scenario=GREENFIELD
+#179  STAGE_READY          REQUIREMENTS       ready
+#180  STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#181  ENTRY_GATE           REQUIREMENTS       ok
+#182  AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#183  EXIT_GATE            REQUIREMENTS       ok
+#184  DECISION             REQUIREMENTS       Ambiguity assessed at 0.10
+#185  STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=1
+#186  STAGE_READY          DESIGN             ready
+#187  STAGE_STARTED        DESIGN             attempt budget=3
+#188  ENTRY_GATE           DESIGN             ok
+#189  AGENT_CALL           DESIGN             attempt 1 produced design-output
+#190  EXIT_GATE            DESIGN             ok
+#191  STAGE_SUCCEEDED      DESIGN             latency_ms=0
+#192  STAGE_READY          IMPLEMENTATION     ready
+#193  STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#194  ENTRY_GATE           IMPLEMENTATION     ok
+#195  AGENT_CALL           IMPLEMENTATION     attempt 1 produced implementation-output
+#196  EXIT_GATE            IMPLEMENTATION     ok
+#197  POLICY_VIOLATION     IMPLEMENTATION     BLOCKER SEC-001-no-hardcoded-secrets: hardcoded secret/credential detected in produced code
+#198  POLICY_GATE          IMPLEMENTATION     blocked by policy
+#199  STAGE_FAILED         IMPLEMENTATION     attempt 1 failed: policy blocker
+#200  STAGE_RETRY          IMPLEMENTATION     retrying (self-correction)
+#201  AGENT_CALL           IMPLEMENTATION     attempt 2 produced implementation-output
+#202  EXIT_GATE            IMPLEMENTATION     ok
+#203  POLICY_VIOLATION     IMPLEMENTATION     BLOCKER SEC-001-no-hardcoded-secrets: hardcoded secret/credential detected in produced code
+#204  POLICY_GATE          IMPLEMENTATION     blocked by policy
+#205  STAGE_FAILED         IMPLEMENTATION     attempt 2 failed: policy blocker
+#206  STAGE_RETRY          IMPLEMENTATION     retrying (self-correction)
+#207  AGENT_CALL           IMPLEMENTATION     attempt 3 produced implementation-output
+#208  EXIT_GATE            IMPLEMENTATION     ok
+#209  POLICY_VIOLATION     IMPLEMENTATION     BLOCKER SEC-001-no-hardcoded-secrets: hardcoded secret/credential detected in produced code
+#210  POLICY_GATE          IMPLEMENTATION     blocked by policy
+#211  STAGE_FAILED         IMPLEMENTATION     attempt 3 failed: policy blocker
+#212  STAGE_FAILED         IMPLEMENTATION     retries exhausted; no safe fallback -> run will roll back
+#213  STAGE_ROLLED_BACK    REQUIREMENTS       compensated
+#214  STAGE_ROLLED_BACK    DESIGN             compensated
+#215  RUN_ROLLED_BACK      -                  run rolled back after failure
+-- metrics --
+success_rate=40% stages_ok=2 stages_failed=3 retries=2 rollbacks=2 approvals=0 replans=0 mttr_ms=0 e2e_ms=59 llm_calls=5 llm_tokens=861
+-- final run state: ROLLED_BACK --
+
+  ? secret-leak run rolls back
+  ? rollback compensated prior stages
+  ? implementation failed
+  ? policy gate blocked the secret leak
+
+============================================================
+GOVERNANCE B ? operator safe-stop before IMPLEMENTATION
+============================================================
+-- audit trail (greenfield-9578045d) --
+#216  RUN_CREATED          -                  run created for: Custom alias support
+#217  RUN_STARTED          -                  scenario=GREENFIELD
+#218  STAGE_READY          REQUIREMENTS       ready
+#219  STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#220  ENTRY_GATE           REQUIREMENTS       ok
+#221  AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#222  EXIT_GATE            REQUIREMENTS       ok
+#223  DECISION             REQUIREMENTS       Ambiguity assessed at 0.10
+#224  STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=0
+#225  STAGE_READY          DESIGN             ready
+#226  STAGE_STARTED        DESIGN             attempt budget=3
+#227  ENTRY_GATE           DESIGN             ok
+#228  AGENT_CALL           DESIGN             attempt 1 produced design-output
+#229  EXIT_GATE            DESIGN             ok
+#230  STAGE_SUCCEEDED      DESIGN             latency_ms=1
+#231  SAFE_STOP            IMPLEMENTATION     operator stop before IMPLEMENTATION
+#232  STAGE_ROLLED_BACK    DESIGN             compensated
+#233  STAGE_ROLLED_BACK    REQUIREMENTS       compensated
+#234  RUN_STOPPED          -                  safe-stop: operator stop before IMPLEMENTATION
+-- metrics --
+success_rate=100% stages_ok=2 stages_failed=0 retries=0 rollbacks=2 approvals=0 replans=0 mttr_ms=0 e2e_ms=3 llm_calls=2 llm_tokens=306
+-- final run state: STOPPED --
+
+  ? safe-stop halts the run
+  ? implementation never ran
+
+============================================================
+GOVERNANCE C ? approval rejected triggers rollback
+============================================================
+-- audit trail (greenfield-ecbfe247) --
+#235  RUN_CREATED          -                  run created for: Custom alias support
+#236  RUN_STARTED          -                  scenario=GREENFIELD
+#237  STAGE_READY          REQUIREMENTS       ready
+#238  STAGE_STARTED        REQUIREMENTS       attempt budget=3
+#239  ENTRY_GATE           REQUIREMENTS       ok
+#240  AGENT_CALL           REQUIREMENTS       attempt 1 produced requirements-output
+#241  EXIT_GATE            REQUIREMENTS       ok
+#242  DECISION             REQUIREMENTS       Ambiguity assessed at 0.10
+#243  STAGE_SUCCEEDED      REQUIREMENTS       latency_ms=1
+#244  STAGE_READY          DESIGN             ready
+#245  STAGE_STARTED        DESIGN             attempt budget=3
+#246  ENTRY_GATE           DESIGN             ok
+#247  AGENT_CALL           DESIGN             attempt 1 produced design-output
+#248  EXIT_GATE            DESIGN             ok
+#249  STAGE_SUCCEEDED      DESIGN             latency_ms=0
+#250  STAGE_READY          IMPLEMENTATION     ready
+#251  STAGE_STARTED        IMPLEMENTATION     attempt budget=3
+#252  ENTRY_GATE           IMPLEMENTATION     ok
+#253  AGENT_CALL           IMPLEMENTATION     attempt 1 produced implementation-output
+#254  EXIT_GATE            IMPLEMENTATION     ok
+#255  APPROVAL_REQUESTED   IMPLEMENTATION     high-impact stage
+#256  APPROVAL_GRANTED     IMPLEMENTATION     by auto-policy
+#257  STAGE_SUCCEEDED      IMPLEMENTATION     latency_ms=0
+#258  STAGE_READY          TESTING            ready
+#259  STAGE_READY          DOCUMENTATION      ready
+#260  STAGE_STARTED        TESTING            attempt budget=3
+#261  ENTRY_GATE           TESTING            ok
+#262  AGENT_CALL           TESTING            attempt 1 produced testing-output
+#263  EXIT_GATE            TESTING            ok
+#264  STAGE_SUCCEEDED      TESTING            latency_ms=1
+#265  STAGE_STARTED        DOCUMENTATION      attempt budget=3
+#266  ENTRY_GATE           DOCUMENTATION      ok
+#267  AGENT_CALL           DOCUMENTATION      attempt 1 produced documentation-output
+#268  EXIT_GATE            DOCUMENTATION      ok
+#269  STAGE_SUCCEEDED      DOCUMENTATION      latency_ms=0
+#270  STAGE_READY          RELEASE_READINESS  ready
+#271  STAGE_STARTED        RELEASE_READINESS  attempt budget=2
+#272  ENTRY_GATE           RELEASE_READINESS  ok
+#273  AGENT_CALL           RELEASE_READINESS  attempt 1 produced release_readiness-output
+#274  EXIT_GATE            RELEASE_READINESS  ok
+#275  APPROVAL_REQUESTED   RELEASE_READINESS  high-impact stage
+#276  APPROVAL_REJECTED    RELEASE_READINESS  not approved for release
+#277  STAGE_FAILED         RELEASE_READINESS  approval rejected: not approved for release
+#278  STAGE_ROLLED_BACK    TESTING            compensated
+#279  STAGE_ROLLED_BACK    REQUIREMENTS       compensated
+#280  STAGE_ROLLED_BACK    DOCUMENTATION      compensated
+#281  STAGE_ROLLED_BACK    IMPLEMENTATION     compensated
+#282  STAGE_ROLLED_BACK    DESIGN             compensated
+#283  RUN_ROLLED_BACK      -                  run rolled back after failure
+-- metrics --
+success_rate=83% stages_ok=5 stages_failed=1 retries=0 rollbacks=5 approvals=2 replans=0 mttr_ms=0 e2e_ms=4 llm_calls=6 llm_tokens=883
+-- final run state: ROLLED_BACK --
+
+  ? rejected release rolls the run back
+
+============================================================
+GOVERNANCE D ? cyclic graph rejected at entry
+============================================================
+  ? cyclic dependency graph is rejected
+
+============================================================
+FLEET RELIABILITY METRICS
+============================================================
+runs=6 fleet_success_rate=85% avg_retries=0.50 rollback_freq=50% avg_mttr_ms=2 avg_e2e_ms=29
+
+ALL GOVERNANCE INVARIANTS HELD ?

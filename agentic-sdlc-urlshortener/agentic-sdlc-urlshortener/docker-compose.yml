@@ -1,0 +1,30 @@
+# Local multi-container run of both services.
+#   docker compose up --build
+# Shortener on :8080, orchestrator on :8090. The two share one JWT secret so an agent token
+# issued by either service is accepted by both (useful for agent-to-service calls).
+services:
+  url-shortener:
+    build:
+      context: .
+      dockerfile: url-shortener/Dockerfile
+    image: url-shortener:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET:-dev-secret-change-me-please-32-bytes-minimum-abcdef0123456789}
+      AGENT_PASSWORD: ${AGENT_PASSWORD:-agent123}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: orchestrator/Dockerfile
+    image: orchestrator:latest
+    ports:
+      - "8090:8090"
+    environment:
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET:-dev-secret-change-me-please-32-bytes-minimum-abcdef0123456789}
+      AGENT_PASSWORD: ${AGENT_PASSWORD:-agent123}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      # Uncomment to exercise the real LLM backend:
+      # ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}

@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: url-shortener
+  datasource:
+    url: jdbc:h2:mem:urlshortener;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 8080
+
+shortener:
+  base-url: http://localhost:8080
+  ratelimit:
+    max-per-window: 100
+    window-seconds: 60
+
+# ---- Security (DEMO values — replace the secret and users in production) ----
+security:
+  jwt:
+    # HS256 requires a secret of at least 32 bytes. Override via SECURITY_JWT_SECRET env var.
+    secret: ${SECURITY_JWT_SECRET:dev-secret-change-me-please-32-bytes-minimum-abcdef0123456789}
+    expiration-seconds: 3600
+  users:
+    - username: admin
+      password: ${ADMIN_PASSWORD:admin123}
+      roles: [ROLE_ADMIN, ROLE_USER]
+    - username: user
+      password: ${USER_PASSWORD:user123}
+      roles: [ROLE_USER]
+    # Service account used by automated agents / machine clients.
+    - username: agent
+      password: ${AGENT_PASSWORD:agent123}
+      roles: [ROLE_AGENT]
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.schwab.urlshortener: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/urlshortener
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:urlshortener}
+    password: ${DB_PASSWORD:urlshortener}
+  jpa:
+    hibernate:
+      ddl-auto: validate
